@@ -6,7 +6,8 @@ export { FORM_ERROR } from "app/core/components/Form"
 export function CharacterForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
   return (
     <Form<S> {...props}>
-      <LabeledTextField name="name" label="Name" placeholder="Name" />
+      <LabeledTextField name="name" label="Name" placeholder="Navn" />
+      <LabeledTextField name="flaw" label="Lyte" placeholder="lyte" />
     </Form>
   )
 }

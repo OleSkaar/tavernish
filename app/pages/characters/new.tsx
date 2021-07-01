@@ -1,11 +1,17 @@
 import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import createCharacter from "app/characters/mutations/createCharacter"
+import createCharacter, { CreateCharacter } from "app/characters/mutations/createCharacter"
 import { CharacterForm, FORM_ERROR } from "app/characters/components/CharacterForm"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
 const NewCharacterPage: BlitzPage = () => {
   const router = useRouter()
   const [createCharacterMutation] = useMutation(createCharacter)
+  const user = useCurrentUser()
+
+  if (!user) {
+    return null
+  }
 
   return (
     <div>
@@ -16,10 +22,11 @@ const NewCharacterPage: BlitzPage = () => {
         // TODO use a zod schema for form validation
         //  - Tip: extract mutation's schema into a shared `validations.ts` file and
         //         then import and use it here
-        // schema={CreateCharacter}
-        // initialValues={{}}
+        schema={CreateCharacter}
+        initialValues={{}}
         onSubmit={async (values) => {
           try {
+            values.userId = user.id
             const character = await createCharacterMutation(values)
             router.push(Routes.ShowCharacterPage({ characterId: character.id }))
           } catch (error) {

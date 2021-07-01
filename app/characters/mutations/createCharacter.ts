@@ -2,8 +2,10 @@ import { resolver } from "blitz"
 import db from "db"
 import { z } from "zod"
 
-const CreateCharacter = z.object({
+export const CreateCharacter = z.object({
   name: z.string(),
+  userId: z.number(),
+  flaw: z.string(),
 })
 
 export default resolver.pipe(resolver.zod(CreateCharacter), resolver.authorize(), async (input) => {

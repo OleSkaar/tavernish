@@ -1,0 +1,18 @@
+import { resolver } from "blitz"
+import db from "db"
+import { z } from "zod"
+
+const CreateGameSession = z.object({
+  name: z.string(),
+})
+
+export default resolver.pipe(
+  resolver.zod(CreateGameSession),
+  resolver.authorize(),
+  async (input) => {
+    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    const gameSession = await db.gameSession.create({ data: input })
+
+    return gameSession
+  }
+)

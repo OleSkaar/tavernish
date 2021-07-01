@@ -21,8 +21,9 @@ model User {
   hashedPassword String?
   role           String   @default("USER")
 
-  tokens   Token[]
-  sessions Session[]
+  tokens    Token[]
+  sessions  Session[]
+  Character Character[]
 }
 
 model Session {
@@ -81,4 +82,39 @@ enum AbilityRank {
   GREAT
   EXCELLENT
   GODLIKE
+}
+
+model Ability {
+  id           Int         @id @default(autoincrement())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  name         String
+  ranking      AbilityRank
+  isBioAbility Boolean
+  Character    Character?  @relation(fields: [characterId], references: [id])
+  characterId  Int?
+}
+
+model Character {
+  id           Int           @id @default(autoincrement())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  name         String
+  rank         String?
+  flaw         String?
+  player       User          @relation(fields: [userId], references: [id])
+  abilities    Ability[]
+  userId       Int
+  GameSessions GameSession[]
+}
+
+model GameSession {
+  id          Int         @id @default(autoincrement())
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  number      Int         @default(autoincrement())
+  name        String?
+  dateStarted DateTime?
+  dateEnded   DateTime?
+  characters  Character[]
 }

@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "UserRole" AS ENUM ('GM', 'PLAYER');
+
+-- CreateEnum
+CREATE TYPE "AbilityRank" AS ENUM ('NO', 'PATHETIC', 'HORRIBLE', 'TERRIBLE', 'POOR', 'MEDICORE', 'AVERAGE', 'GOOD', 'GREAT', 'EXCELLENT', 'GODLIKE');

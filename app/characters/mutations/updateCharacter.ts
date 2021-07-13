@@ -5,6 +5,9 @@ import { z } from "zod"
 const UpdateCharacter = z.object({
   id: z.number(),
   name: z.string(),
+  flaw: z.string().optional(),
+  rank: z.string().optional(),
+  titles: z.string().optional(),
 })
 
 export default resolver.pipe(

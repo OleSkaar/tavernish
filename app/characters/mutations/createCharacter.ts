@@ -5,9 +5,9 @@ import { z } from "zod"
 export const CreateCharacter = z.object({
   userId: z.number(),
   name: z.string(),
-  flaw: z.string(),
-  titles: z.string(),
-  rank: z.string(),
+  flaw: z.string().optional(),
+  titles: z.string().optional(),
+  rank: z.string().optional(),
 })
 
 export default resolver.pipe(resolver.zod(CreateCharacter), resolver.authorize(), async (input) => {

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Character" ADD COLUMN     "rank" TEXT,
+ALTER COLUMN "titles" DROP NOT NULL,
+ALTER COLUMN "titles" SET DATA TYPE TEXT;

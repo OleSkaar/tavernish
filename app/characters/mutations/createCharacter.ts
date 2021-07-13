@@ -3,9 +3,11 @@ import db from "db"
 import { z } from "zod"
 
 export const CreateCharacter = z.object({
-  name: z.string(),
   userId: z.number(),
+  name: z.string(),
   flaw: z.string(),
+  titles: z.string(),
+  rank: z.string(),
 })
 
 export default resolver.pipe(resolver.zod(CreateCharacter), resolver.authorize(), async (input) => {

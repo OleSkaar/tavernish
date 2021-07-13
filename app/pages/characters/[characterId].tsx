@@ -3,21 +3,24 @@ import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Rout
 import Layout from "app/core/layouts/Layout"
 import getCharacter from "app/characters/queries/getCharacter"
 import deleteCharacter from "app/characters/mutations/deleteCharacter"
+import getUserById from "app/users/queries/getUserById"
 
 export const Character = () => {
   const router = useRouter()
   const characterId = useParam("characterId", "number")
   const [deleteCharacterMutation] = useMutation(deleteCharacter)
   const [character] = useQuery(getCharacter, { id: characterId })
+  const [user] = useQuery(getUserById, { id: character.userId })
 
   return (
     <>
       <Head>
-        <title>Character {character.id}</title>
+        <title>Tavernish | {character.name}</title>
       </Head>
 
       <div>
-        <h1>Character {character.id}</h1>
+        <h1>{character.name}</h1>
+        <p>Spiller: {user?.name}</p>
         <pre>{JSON.stringify(character, null, 2)}</pre>
 
         <Link href={Routes.EditCharacterPage({ characterId: character.id })}>
@@ -36,6 +39,9 @@ export const Character = () => {
         >
           Delete
         </button>
+
+        <hr />
+        <h2>Evner</h2>
       </div>
     </>
   )

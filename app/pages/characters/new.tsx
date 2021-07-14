@@ -15,7 +15,7 @@ const NewCharacterPage: BlitzPage = () => {
 
   return (
     <div>
-      <h1>Create New Character</h1>
+      <h1>Ny karakter</h1>
 
       <CharacterForm
         submitText="Create Character"

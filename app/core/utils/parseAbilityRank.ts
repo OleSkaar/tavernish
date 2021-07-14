@@ -1,6 +1,6 @@
 import { AbilityRank } from "@prisma/client"
 
-export const useAbilityRank = (rank: AbilityRank) => {
+export const parseAbilityRank = (rank: AbilityRank) => {
   switch (rank) {
     case AbilityRank.NO:
       return "Nei"

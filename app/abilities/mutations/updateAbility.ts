@@ -1,10 +1,12 @@
 import { resolver } from "blitz"
-import db from "db"
+import db, { AbilityRank } from "db"
 import { z } from "zod"
 
 const UpdateAbility = z.object({
   id: z.number(),
   name: z.string(),
+  ranking: z.nativeEnum(AbilityRank),
+  isBioAbility: z.boolean(),
 })
 
 export default resolver.pipe(

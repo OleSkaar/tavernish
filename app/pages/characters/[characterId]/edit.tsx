@@ -54,12 +54,10 @@ export const EditCharacter = () => {
           initialValues={{ ...character, abilities }}
           onSubmit={async (values) => {
             try {
-              console.log("VALUES", values)
               const updated = await updateCharacterMutation({
                 id: character.id,
                 ...values,
               })
-              console.log("VALUES UPDATED", updated)
               await setQueryData(updated)
               router.push(Routes.ShowCharacterPage({ characterId: updated.id }))
             } catch (error) {

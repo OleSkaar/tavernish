@@ -3,10 +3,12 @@ import Layout from "app/core/layouts/Layout"
 import createCharacter, { CreateCharacter } from "app/characters/mutations/createCharacter"
 import { CharacterForm, FORM_ERROR } from "app/characters/components/CharacterForm"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import createAbilities from "app/abilities/mutations/createAbilities"
 
 const NewCharacterPage: BlitzPage = () => {
   const router = useRouter()
   const [createCharacterMutation] = useMutation(createCharacter)
+  const [createAbilitiesMutation] = useMutation(createAbilities)
   const user = useCurrentUser()
 
   if (!user) {
@@ -18,7 +20,7 @@ const NewCharacterPage: BlitzPage = () => {
       <h1>Ny karakter</h1>
 
       <CharacterForm
-        submitText="Create Character"
+        submitText="Lag karakter"
         // TODO use a zod schema for form validation
         //  - Tip: extract mutation's schema into a shared `validations.ts` file and
         //         then import and use it here

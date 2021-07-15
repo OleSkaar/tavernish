@@ -2,7 +2,7 @@ import { resolver } from "blitz"
 import db, { AbilityRank } from "db"
 import { z } from "zod"
 
-const CreateAbility = z.object({
+export const CreateAbility = z.object({
   name: z.string(),
   ranking: z.nativeEnum(AbilityRank),
   isBioAbility: z.boolean(),

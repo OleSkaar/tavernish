@@ -26,11 +26,13 @@
   "dependencies": {
     "@prisma/client": "2.26.0",
     "blitz": "0.38.2",
-    "react-dom": "alpha",
-    "react": "alpha",
-    "zod": "3.2.0",
     "final-form": "4.20.2",
-    "react-final-form": "6.5.3"
+    "final-form-arrays": "3.0.2",
+    "react": "alpha",
+    "react-dom": "alpha",
+    "react-final-form": "6.5.3",
+    "react-final-form-arrays": "3.1.3",
+    "zod": "3.2.0"
   },
   "devDependencies": {
     "@types/preview-email": "2.0.0",

@@ -1,9 +1,22 @@
 import { Suspense } from "react"
-import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from "blitz"
+import {
+  Head,
+  Link,
+  useRouter,
+  useQuery,
+  useMutation,
+  useParam,
+  BlitzPage,
+  Routes,
+  usePaginatedQuery,
+} from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getCharacter from "app/characters/queries/getCharacter"
 import updateCharacter from "app/characters/mutations/updateCharacter"
 import { CharacterForm, FORM_ERROR } from "app/characters/components/CharacterForm"
+import getAbilities from "app/abilities/queries/getAbilities"
+import updateAbilities from "app/abilities/mutations/updateAbilities"
+import UpdateAbilities from "app/abilities/mutations/updateAbilities"
 
 export const EditCharacter = () => {
   const router = useRouter()
@@ -16,31 +29,37 @@ export const EditCharacter = () => {
       staleTime: Infinity,
     }
   )
+  const [{ abilities }] = usePaginatedQuery(getAbilities, {
+    where: { characterId: characterId },
+  })
   const [updateCharacterMutation] = useMutation(updateCharacter)
 
   return (
     <>
       <Head>
-        <title>Edit Character {character.id}</title>
+        <title>Tavernish | Rediger {character.name}</title>
       </Head>
 
       <div>
-        <h1>Edit Character {character.id}</h1>
+        <h1>Rediger {character.name}</h1>
         <pre>{JSON.stringify(character)}</pre>
+        <pre>{JSON.stringify(abilities)}</pre>
 
         <CharacterForm
-          submitText="Update Character"
+          submitText="Oppdater karakter"
           // TODO use a zod schema for form validation
           //  - Tip: extract mutation's schema into a shared `validations.ts` file and
           //         then import and use it here
           // schema={UpdateCharacter}
-          initialValues={character}
+          initialValues={{ ...character, abilities }}
           onSubmit={async (values) => {
             try {
+              console.log("VALUES", values)
               const updated = await updateCharacterMutation({
                 id: character.id,
                 ...values,
               })
+              console.log("VALUES UPDATED", updated)
               await setQueryData(updated)
               router.push(Routes.ShowCharacterPage({ characterId: updated.id }))
             } catch (error) {

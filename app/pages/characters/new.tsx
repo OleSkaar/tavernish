@@ -3,12 +3,10 @@ import Layout from "app/core/layouts/Layout"
 import createCharacter, { CreateCharacter } from "app/characters/mutations/createCharacter"
 import { CharacterForm, FORM_ERROR } from "app/characters/components/CharacterForm"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import createAbilities from "app/abilities/mutations/createAbilities"
 
 const NewCharacterPage: BlitzPage = () => {
   const router = useRouter()
   const [createCharacterMutation] = useMutation(createCharacter)
-  const [createAbilitiesMutation] = useMutation(createAbilities)
   const user = useCurrentUser()
 
   if (!user) {

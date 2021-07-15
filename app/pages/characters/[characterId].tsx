@@ -42,6 +42,10 @@ export const Character = () => {
           <a>Edit</a>
         </Link>
 
+        <hr />
+        <h2>Evner</h2>
+        <hr />
+
         <button
           type="button"
           onClick={async () => {
@@ -52,11 +56,8 @@ export const Character = () => {
           }}
           style={{ marginLeft: "0.5rem" }}
         >
-          Delete
+          Slett
         </button>
-
-        <hr />
-        <h2>Evner</h2>
       </div>
     </>
   )

@@ -11,6 +11,7 @@ export default resolver.pipe(
   resolver.authorize(),
   async ({ id }) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+    await db.ability.deleteMany({ where: { characterId: id } })
     const character = await db.character.deleteMany({ where: { id } })
 
     return character

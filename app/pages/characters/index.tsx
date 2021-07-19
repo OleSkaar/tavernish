@@ -29,12 +29,16 @@ export const CharactersList = () => {
         ))}
       </ul>
 
-      <button disabled={page === 0} onClick={goToPreviousPage}>
-        Previous
-      </button>
-      <button disabled={!hasMore} onClick={goToNextPage}>
-        Next
-      </button>
+      {characters.length > ITEMS_PER_PAGE && (
+        <nav>
+          <button disabled={page === 0} onClick={goToPreviousPage}>
+            Previous
+          </button>
+          <button disabled={!hasMore} onClick={goToNextPage}>
+            Next
+          </button>
+        </nav>
+      )}
     </div>
   )
 }
@@ -43,17 +47,17 @@ const CharactersPage: BlitzPage = () => {
   return (
     <>
       <Head>
-        <title>Characters</title>
+        <title>Karakterer</title>
       </Head>
 
       <div>
         <p>
           <Link href={Routes.NewCharacterPage()}>
-            <a>Create Character</a>
+            <a>Lag en karakter</a>
           </Link>
         </p>
 
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Laster...</div>}>
           <CharactersList />
         </Suspense>
       </div>
@@ -61,7 +65,7 @@ const CharactersPage: BlitzPage = () => {
   )
 }
 
-CharactersPage.authenticate = true
+CharactersPage.authenticate = false
 CharactersPage.getLayout = (page) => <Layout>{page}</Layout>
 
 export default CharactersPage

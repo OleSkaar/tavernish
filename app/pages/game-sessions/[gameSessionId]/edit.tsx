@@ -59,7 +59,7 @@ export const EditGameSession = () => {
 const EditGameSessionPage: BlitzPage = () => {
   return (
     <div>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>Laster...</div>}>
         <EditGameSession />
       </Suspense>
 

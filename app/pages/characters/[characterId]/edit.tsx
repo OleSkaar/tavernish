@@ -15,8 +15,6 @@ import getCharacter from "app/characters/queries/getCharacter"
 import updateCharacter from "app/characters/mutations/updateCharacter"
 import { CharacterForm, FORM_ERROR } from "app/characters/components/CharacterForm"
 import getAbilities from "app/abilities/queries/getAbilities"
-import updateAbilities from "app/abilities/mutations/updateAbilities"
-import UpdateAbilities from "app/abilities/mutations/updateAbilities"
 
 export const EditCharacter = () => {
   const router = useRouter()
@@ -76,7 +74,7 @@ export const EditCharacter = () => {
 const EditCharacterPage: BlitzPage = () => {
   return (
     <div>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div>Laster...</div>}>
         <EditCharacter />
       </Suspense>
 

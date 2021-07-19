@@ -53,7 +53,7 @@ const GameSessionsPage: BlitzPage = () => {
           </Link>
         </p>
 
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div>Laster...</div>}>
           <GameSessionsList />
         </Suspense>
       </div>

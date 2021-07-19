@@ -5,7 +5,6 @@ interface GetCharactersInput
   extends Pick<Prisma.CharacterFindManyArgs, "where" | "orderBy" | "skip" | "take"> {}
 
 export default resolver.pipe(
-  resolver.authorize(),
   async ({ where, orderBy, skip = 0, take = 100 }: GetCharactersInput) => {
     // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const {

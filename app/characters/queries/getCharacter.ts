@@ -7,8 +7,7 @@ const GetCharacter = z.object({
   id: z.number().optional().refine(Boolean, "Required"),
 })
 
-export default resolver.pipe(resolver.zod(GetCharacter), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+export default resolver.pipe(resolver.zod(GetCharacter), async ({ id }) => {
   const character = await db.character.findFirst({ where: { id } })
 
   if (!character) throw new NotFoundError()

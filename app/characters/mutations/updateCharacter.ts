@@ -35,12 +35,12 @@ export default resolver.pipe(
             // because `|| 0` shouldn't be needed
             where: { id: ability.id || 0 },
             create: {
-              name: ability.name,
+              name: ability?.name || "",
               isBioAbility: ability.isBioAbility,
               ranking: ability.ranking,
             },
             update: {
-              name: ability.name,
+              name: ability?.name || "",
               isBioAbility: ability.isBioAbility,
               ranking: ability.ranking,
             },

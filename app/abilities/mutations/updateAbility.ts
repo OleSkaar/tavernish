@@ -4,7 +4,7 @@ import { z } from "zod"
 
 export const UpdateAbility = z.object({
   id: z.number().optional(),
-  name: z.string().optional().nullable(),
+  name: z.string().optional(),
   ranking: z.nativeEnum(AbilityRank),
   isBioAbility: z.boolean(),
 })

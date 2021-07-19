@@ -9,12 +9,15 @@ import {
   BlitzPage,
   Routes,
   usePaginatedQuery,
+  useSession,
 } from "blitz"
+
 import Layout from "app/core/layouts/Layout"
 import getCharacter from "app/characters/queries/getCharacter"
 import updateCharacter from "app/characters/mutations/updateCharacter"
 import { CharacterForm, FORM_ERROR } from "app/characters/components/CharacterForm"
 import getAbilities from "app/abilities/queries/getAbilities"
+import { UserRole } from "db"
 
 export const EditCharacter = () => {
   const router = useRouter()
@@ -32,7 +35,9 @@ export const EditCharacter = () => {
   })
   const [updateCharacterMutation] = useMutation(updateCharacter)
 
-  return (
+  const session = useSession()
+
+  return session.userId === character.userId || session.role === UserRole.GM ? (
     <>
       <Head>
         <title>Tavernish | Rediger {character.name}</title>
@@ -68,6 +73,13 @@ export const EditCharacter = () => {
         />
       </div>
     </>
+  ) : (
+    <div>
+      <p>Du har ikke tilgang til å redigere denne karakteren.</p>
+      <Link href={Routes.Home()}>
+        <a>Forside</a>
+      </Link>
+    </div>
   )
 }
 

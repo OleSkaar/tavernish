@@ -5,6 +5,7 @@ import { z } from "zod"
 
 const UpdateCharacter = z.object({
   id: z.number(),
+  userId: z.number().optional(),
   name: z.string(),
   flaw: z.string().optional().nullable(),
   rank: z.string().optional().nullable(),
@@ -16,17 +17,13 @@ export default resolver.pipe(
   resolver.zod(UpdateCharacter),
   resolver.authorize(),
   async ({ id, ...data }) => {
-    console.log("DATA", data)
-    console.log(data.abilities.map((ability) => ability.id))
-
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
     const character = await db.character.update({
       where: { id },
       data: {
         ...data,
         abilities: {
           deleteMany: {
-            // ---> It will delete all "other" data not included in "others" list
+            // Will delete all Ability data not included in abilities list
             characterId: id,
             NOT: data.abilities.map(({ id }) => ({ id })),
           },

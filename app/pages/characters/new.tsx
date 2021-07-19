@@ -3,6 +3,7 @@ import Layout from "app/core/layouts/Layout"
 import createCharacter, { CreateCharacter } from "app/characters/mutations/createCharacter"
 import { CharacterForm, FORM_ERROR } from "app/characters/components/CharacterForm"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import { UserRole } from "db"
 
 const NewCharacterPage: BlitzPage = () => {
   const router = useRouter()
@@ -26,7 +27,11 @@ const NewCharacterPage: BlitzPage = () => {
         initialValues={{}}
         onSubmit={async (values) => {
           try {
-            values.userId = user.id
+            if (user.role === UserRole.GM) {
+              values.userId = values.userId ?? user.id
+            } else {
+              values.userId = user.id
+            }
             const character = await createCharacterMutation(values)
             router.push(Routes.ShowCharacterPage({ characterId: character.id }))
           } catch (error) {

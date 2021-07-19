@@ -1,8 +1,7 @@
 import { resolver, useMutation } from "blitz"
 import db from "db"
 import { z } from "zod"
-import { AbilityRank } from "@prisma/client"
-import createAbility, { CreateAbility } from "app/abilities/mutations/createAbility"
+import { CreateAbility } from "app/abilities/mutations/createAbility"
 
 export const CreateCharacter = z.object({
   userId: z.number(),
@@ -14,7 +13,6 @@ export const CreateCharacter = z.object({
 })
 
 export default resolver.pipe(resolver.zod(CreateCharacter), resolver.authorize(), async (input) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
   const characterData = {
     userId: input.userId,
     name: input.name,

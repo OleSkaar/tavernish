@@ -2,13 +2,18 @@ import { Form, FormProps } from "app/core/components/Form"
 import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { z } from "zod"
 export { FORM_ERROR } from "app/core/components/Form"
-import { AbilityRank } from "@prisma/client"
+import { AbilityRank, UserRole } from "@prisma/client"
 import { parseAbilityRank } from "app/core/utils/parseAbilityRank"
 import React from "react"
 import { FieldArray } from "react-final-form-arrays"
 import { Field } from "react-final-form"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import getAllUsers from "app/users/queries/getAllUsers"
+import { useQuery } from "blitz"
 
 export function CharacterForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
+  const user = useCurrentUser()
+  const [users] = useQuery(getAllUsers, undefined)
   const newCharacterAbilityRanks = ["GREAT", "GOOD", "AVERAGE", "MEDIOCRE", "POOR"]
 
   // as any used as workaround here for TypeScript error
@@ -74,6 +79,15 @@ export function CharacterForm<S extends z.ZodType<any, any>>(props: FormProps<S>
       <LabeledTextField name="flaw" label="Lyte" placeholder="Lyte" />
       <LabeledTextField name="rank" label="Rang" placeholder="Rang" />
       <LabeledTextField name="titles" label="Titler" placeholder="Titler" />
+      {user?.role === UserRole.GM && (
+        <Field name="userId" component={"select"} label="Bruker" parse={(value) => parseInt(value)}>
+          {users.map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.name}
+            </option>
+          ))}
+        </Field>
+      )}
       <hr />
       <h2>Evner</h2>
     </Form>

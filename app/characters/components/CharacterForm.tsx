@@ -9,7 +9,7 @@ import { FieldArray } from "react-final-form-arrays"
 import { Field } from "react-final-form"
 
 export function CharacterForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
-  const newCharacterAbilityRanks = ["GREAT", "GOOD", "AVERAGE", "MEDICORE", "POOR"]
+  const newCharacterAbilityRanks = ["GREAT", "GOOD", "AVERAGE", "MEDIOCRE", "POOR"]
 
   // as any used as workaround here for TypeScript error
   const { abilities } = props.initialValues as any

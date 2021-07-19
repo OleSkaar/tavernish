@@ -12,7 +12,7 @@ export const parseAbilityRank = (rank: AbilityRank) => {
       return "Elendig"
     case AbilityRank.POOR:
       return "Dårlig"
-    case AbilityRank.MEDICORE:
+    case AbilityRank.MEDIOCRE:
       return "Måtelig"
     case AbilityRank.AVERAGE:
       return "Middels"

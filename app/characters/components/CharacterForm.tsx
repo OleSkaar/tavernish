@@ -81,11 +81,16 @@ export function CharacterForm<S extends z.ZodType<any, any>>(props: FormProps<S>
       <LabeledTextField name="titles" label="Titler" placeholder="Titler" />
       {user?.role === UserRole.GM && (
         <Field name="userId" component={"select"} label="Bruker" parse={(value) => parseInt(value)}>
-          {users.map((user) => (
-            <option key={user.id} value={user.id}>
-              {user.name}
-            </option>
-          ))}
+          {users
+            .sort((a, b) => {
+              if (b?.id === user?.id) return 1
+              else return -1
+            })
+            .map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.name}
+              </option>
+            ))}
         </Field>
       )}
       <hr />

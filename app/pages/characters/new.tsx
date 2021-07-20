@@ -33,7 +33,7 @@ const NewCharacterPage: BlitzPage = () => {
               values.userId = user.id
             }
             const character = await createCharacterMutation(values)
-            router.push(Routes.ShowCharacterPage({ characterId: character.id }))
+            router.push(Routes.ShowCharacterPage({ slug: character.slug }))
           } catch (error) {
             console.error(error)
             return {

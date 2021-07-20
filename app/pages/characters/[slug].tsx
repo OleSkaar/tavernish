@@ -15,14 +15,16 @@ import getCharacter from "app/characters/queries/getCharacter"
 import deleteCharacter from "app/characters/mutations/deleteCharacter"
 import getUserById from "app/users/queries/getUserById"
 import getAbilities from "app/abilities/queries/getAbilities"
+import getCharacterBySlug from "app/characters/queries/getCharacterBySlug"
 
 export const Character = () => {
   const router = useRouter()
-  const characterId = useParam("characterId", "number")
+  const slug = useParam("slug", "string")
   const [deleteCharacterMutation] = useMutation(deleteCharacter)
-  const [character] = useQuery(getCharacter, { id: characterId })
+  //const [character] = useQuery(getCharacter, { id: slug })
+  const [character] = useQuery(getCharacterBySlug, { slug: slug })
   const [{ abilities }] = usePaginatedQuery(getAbilities, {
-    where: { characterId: characterId },
+    where: { characterId: character.id },
   })
   const [user] = useQuery(getUserById, { id: character.userId })
 
@@ -38,7 +40,7 @@ export const Character = () => {
         <pre>{JSON.stringify(character, null, 2)}</pre>
         <pre>{JSON.stringify(abilities, null, 2)}</pre>
 
-        <Link href={Routes.EditCharacterPage({ characterId: character.id })}>
+        <Link href={Routes.EditCharacterPage({ slug: character.slug })}>
           <a>Edit</a>
         </Link>
 

@@ -22,7 +22,7 @@ export const CharactersList = () => {
       <ul>
         {characters.map((character) => (
           <li key={character.id}>
-            <Link href={Routes.ShowCharacterPage({ characterId: character.id })}>
+            <Link href={Routes.ShowCharacterPage({ slug: character.slug })}>
               <a>{character.name}</a>
             </Link>
           </li>

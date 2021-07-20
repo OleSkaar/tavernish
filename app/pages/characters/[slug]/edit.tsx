@@ -18,20 +18,21 @@ import updateCharacter from "app/characters/mutations/updateCharacter"
 import { CharacterForm, FORM_ERROR } from "app/characters/components/CharacterForm"
 import getAbilities from "app/abilities/queries/getAbilities"
 import { UserRole } from "db"
+import getCharacterBySlug from "app/characters/queries/getCharacterBySlug"
 
 export const EditCharacter = () => {
   const router = useRouter()
-  const characterId = useParam("characterId", "number")
+  const slug = useParam("slug", "string")
   const [character, { setQueryData }] = useQuery(
-    getCharacter,
-    { id: characterId },
+    getCharacterBySlug,
+    { slug: slug },
     {
       // This ensures the query never refreshes and overwrites the form data while the user is editing.
       staleTime: Infinity,
     }
   )
   const [{ abilities }] = usePaginatedQuery(getAbilities, {
-    where: { characterId: characterId },
+    where: { characterId: character.id },
   })
   const [updateCharacterMutation] = useMutation(updateCharacter)
 
@@ -62,7 +63,7 @@ export const EditCharacter = () => {
                 ...values,
               })
               await setQueryData(updated)
-              router.push(Routes.ShowCharacterPage({ characterId: updated.id }))
+              router.push(Routes.ShowCharacterPage({ slug: updated.slug }))
             } catch (error) {
               console.error(error)
               return {
@@ -92,7 +93,7 @@ const EditCharacterPage: BlitzPage = () => {
 
       <p>
         <Link href={Routes.CharactersPage()}>
-          <a>Characters</a>
+          <a>Karakterer</a>
         </Link>
       </p>
     </div>

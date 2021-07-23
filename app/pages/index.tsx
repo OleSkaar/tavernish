@@ -4,6 +4,7 @@ import Layout from "app/core/layouts/Layout"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import logout from "app/auth/mutations/logout"
 import { CharactersList } from "app/pages/characters/index"
+import NumericDiceRoller from "app/core/game-logic/components/GeneralDiceRoller"
 
 /*
  * This file is just for a pleasant getting started page for your new app.
@@ -65,6 +66,7 @@ const Home: BlitzPage = () => {
           </Suspense>
         </div>
         <CharactersList />
+        <NumericDiceRoller />
       </main>
     </div>
   )

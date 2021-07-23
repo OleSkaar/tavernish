@@ -47,9 +47,9 @@ const printFudgeRank = (rank: AbilityRank) => {
   }
 }
 
-export const FudgeDiceRankToValue = (rank: AbilityRank) => FudgeDiceRankValueMap[rank]
+export const fudgeDiceRankToValue = (rank: AbilityRank) => FudgeDiceRankValueMap[rank]
 
-export const FudgeDiceValueToRank = (value: FudgeResultOutputRange) => {
+export const fudgeDiceValueToRank = (value: FudgeResultOutputRange) => {
   if (value < -4) return AbilityRank.NO
   if (value > 6) return AbilityRank.GODLIKE
 
@@ -69,7 +69,7 @@ const printFudgeDiceRoll = (roll: FudgeDiceRange) => {
   }
 }
 
-const FudgeDiceResultToSymbols = (roll: FudgeDicePair) =>
+const fudgeDiceResultToSymbols = (roll: FudgeDicePair) =>
   `${printFudgeDiceRoll(roll.dieOne)}${printFudgeDiceRoll(roll.dieTwo)}`
 
 export interface FudgeDiceResult extends FudgeDiceOutput {
@@ -81,13 +81,31 @@ export interface FudgeDiceResult extends FudgeDiceOutput {
 
 export const printFudgeDiceResult = (result: FudgeDiceResult) => {
   const { characterName, total, abilityName, firstRoll, userName } = result
-  const rank = printFudgeRank(FudgeDiceValueToRank(total))
-  const firstRollSymbols = FudgeDiceResultToSymbols(firstRoll)
+  const rank = printFudgeRank(fudgeDiceValueToRank(total))
+  const firstRollSymbols = fudgeDiceResultToSymbols(firstRoll)
   const secondRollSymbols = result?.secondRoll
-    ? ` & ${FudgeDiceResultToSymbols(result.secondRoll)}`
+    ? ` & ${fudgeDiceResultToSymbols(result.secondRoll)}`
     : ""
 
   return `${characterName} fikk ${rank} i ${abilityName} (${firstRollSymbols}${secondRollSymbols}), trillet av: ${
     userName ?? "Anonym bruker"
   }.`
+}
+
+export const parseGeneralFudgeDiceResult = (
+  output: FudgeDiceOutput,
+  characterName?: string,
+  userName?: string | null
+) => {
+  const { firstRoll, total } = output
+  const rank = printFudgeRank(fudgeDiceValueToRank(total))
+  const rollSymbols = fudgeDiceResultToSymbols(firstRoll)
+  const parsedResult = `${rank} på 2df (${rollSymbols})`
+  const user = userName ? userName : "Anonym bruker"
+
+  if (characterName) {
+    return `${characterName} fikk ${parsedResult}, trillet av ${user}.`
+  } else {
+    return `${user} trillet ${parsedResult}.`
+  }
 }

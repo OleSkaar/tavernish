@@ -10,6 +10,7 @@ import { rollFudgeDice, rollDoubleFudgeDice } from "app/core/game-logic/rollFudg
 import { printFudgeDiceResult, FudgeDiceResult } from "app/core/game-logic/parseFudgeDice"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { sendMessageToDiscord } from "app/core/webhooks/discord"
+import NumericDiceRoller from "app/core/game-logic/components/GeneralDiceRoller"
 
 export const Character = () => {
   const slug = useParam("slug", "string")
@@ -80,11 +81,10 @@ export const Character = () => {
             </p>
             {printFudgeDiceResult(diceResult)}
             {diceResult.secondRollRequired && (
-              <button onClick={handleDoubleDiceRoll}>Trill igjen!</button>
+              <button onClick={() => handleDoubleDiceRoll}>Trill igjen!</button>
             )}
           </div>
         )}
-        <hr />
         {ranks.map((rank) => {
           return (
             <div key={rank}>
@@ -104,6 +104,9 @@ export const Character = () => {
             </div>
           )
         })}
+        <hr />
+        <h2>Generelt</h2>
+        <NumericDiceRoller characterName={character.name} />
       </div>
     </>
   )

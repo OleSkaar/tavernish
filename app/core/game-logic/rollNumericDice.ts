@@ -1,3 +1,5 @@
-export type Dice = "d4" | "d6" | "d8" | "d10" | "d20" | "d100"
+export const AllNumericDice = [4, 6, 8, 10, 12, 20, 100] as const
+type NumericDiceTuple = typeof AllNumericDice
+export type NumericDice = NumericDiceTuple[number]
 
-export function rollNumericDice(dice) {}
+export const rollNumericDice = (die: NumericDice) => Math.floor(Math.random() * die) + 1

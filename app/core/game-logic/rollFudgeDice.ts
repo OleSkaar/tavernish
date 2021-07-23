@@ -1,5 +1,5 @@
 import { AbilityRank } from "db"
-import { FudgeDiceRankToValue, FudgeDiceResult } from "./parseFudgeDice"
+import { fudgeDiceRankToValue, FudgeDiceResult } from "./parseFudgeDice"
 
 export type FudgeDiceRange = -1 | 0 | 1
 
@@ -26,14 +26,17 @@ export interface FudgeDiceOutput {
   total: FudgeResultOutputRange
 }
 
-export function rollFudgeDice(rank: AbilityRank): FudgeDiceOutput {
+export function rollFudgeDice(rank?: AbilityRank): FudgeDiceOutput {
   const firstRoll = fudgeDice()
   const { dieOne, dieTwo } = firstRoll
+  const total = (dieOne +
+    dieTwo +
+    (rank ? fudgeDiceRankToValue(rank) : 0)) as FudgeResultOutputRange
 
   return {
     firstRoll,
     secondRollRequired: dieOne === dieTwo && dieOne !== 0 && dieTwo !== 0,
-    total: (dieOne + dieTwo + FudgeDiceRankToValue(rank)) as FudgeResultOutputRange,
+    total,
   }
 }
 

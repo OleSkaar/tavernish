@@ -1,4 +1,4 @@
-export const AllNumericDice = [4, 6, 8, 10, 12, 20, 100] as const
+export const AllNumericDice = [10, 100, 20, 12, 8, 6, 4] as const
 type NumericDiceTuple = typeof AllNumericDice
 export type NumericDice = NumericDiceTuple[number]
 

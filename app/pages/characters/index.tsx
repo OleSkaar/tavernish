@@ -21,12 +21,22 @@ export const CharactersList = () => {
     <div>
       <ul>
         {characters.map((character) => (
-          <li key={character.id}>
+          <li key={character.id} className="border-b border-dotted border-black pt-2 mb-4">
             <Link href={Routes.ShowCharacterPage({ slug: character.slug })}>
-              <a>{character.name}</a>
+              <a>
+                <div className="flex justify-between">
+                  <a>{character.name}</a>
+                  <a className="text-sm">{character?.rank}</a>
+                </div>
+              </a>
             </Link>
           </li>
         ))}
+        <li className="border border-dotted border-black mt-8">
+          <Link href={Routes.NewCharacterPage()}>
+            <a className="p-4 block">➕ Lag en karakter</a>
+          </Link>
+        </li>
       </ul>
 
       {characters.length > ITEMS_PER_PAGE && (

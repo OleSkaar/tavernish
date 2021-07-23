@@ -14,46 +14,19 @@ import { useDiceResultState } from "app/core/game-logic/hooks/useDiceResultState
 
 const UserInfo = () => {
   const currentUser = useCurrentUser()
-  const [logoutMutation] = useMutation(logout)
 
   if (currentUser) {
-    return (
-      <>
-        <button
-          className="button small"
-          onClick={async () => {
-            await logoutMutation()
-          }}
-        >
-          Logout
-        </button>
-        <div>
-          User id: <code>{currentUser.id}</code>
-          <br />
-          User role: <code>{currentUser.role}</code>
-          <br />
-          User name: <code>{currentUser.name}</code>
-        </div>
-      </>
-    )
-  } else {
-    return (
-      <>
-        <p>
-          <Link href={Routes.SignupPage()}>
-            <a className="button small">
-              <strong>Sign Up</strong>
-            </a>
-          </Link>
-        </p>
-        <Link href={Routes.LoginPage()}>
-          <a className="button small">
-            <strong>Login</strong>
-          </a>
-        </Link>
-      </>
-    )
+    return null
   }
+
+  return (
+    <>
+      <p>Ikke laget bruker enda? Trykk her!</p>
+      <Link href={Routes.SignupPage()}>
+        <a className="p-4 border border-double border-black rounded-md inline-block">Meld deg på</a>
+      </Link>
+    </>
+  )
 }
 
 const Home: BlitzPage = () => {
@@ -61,13 +34,15 @@ const Home: BlitzPage = () => {
 
   return (
     <div className="container">
-      <main>
-        <h1>HQ</h1>
-        <div className="buttons" style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+      <main className="space-y-8">
+        <h1 className="text-4xl">Velkommen til Tavernish 2.0!</h1>
+        <p>Du kan nå lage din egen bruker, opprette karakterer, og oppdatere character sheets.</p>
+        <div className="space-y-4">
           <Suspense fallback="Laster...">
             <UserInfo />
           </Suspense>
         </div>
+        <h2 className="text-4xl">Karakterer</h2>
         <CharactersList />
         {diceResult.result}
         <GeneralDiceRoller setDiceResult={setDiceResult} />

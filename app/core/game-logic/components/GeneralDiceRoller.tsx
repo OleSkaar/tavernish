@@ -1,3 +1,4 @@
+import { Button } from "app/core/components/Button"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { sendMessageToDiscord } from "app/core/webhooks/discord"
 import React, { useState } from "react"
@@ -44,13 +45,14 @@ const GeneralDiceRoller = ({ characterName, setDiceResult }: GeneralDiceRollerPr
   }
 
   return (
-    <div>
-      {<button onClick={() => handleFudgeDiceRoll()}>2df</button>}
-      {AllNumericDice.map((die) => (
-        <button key={`${die}`} onClick={() => handleDiceRoll(die)}>
-          d{die}
-        </button>
-      ))}
+    <div className="space-y-4">
+      <h2 className="text-2xl">Generelle terninger</h2>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Button text={"2df"} onClick={() => handleFudgeDiceRoll()} />
+        {AllNumericDice.map((die) => (
+          <Button key={`d${die}`} text={`d${die}`} onClick={() => handleDiceRoll(die)} />
+        ))}
+      </div>
     </div>
   )
 }

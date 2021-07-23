@@ -1,32 +1,44 @@
-import { Suspense } from "react"
-import {
-  Head,
-  Link,
-  useRouter,
-  useQuery,
-  useParam,
-  BlitzPage,
-  useMutation,
-  Routes,
-  usePaginatedQuery,
-} from "blitz"
+import { Suspense, useState } from "react"
+import { Head, Link, useQuery, useParam, BlitzPage, Routes, usePaginatedQuery } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import getCharacter from "app/characters/queries/getCharacter"
-import deleteCharacter from "app/characters/mutations/deleteCharacter"
 import getUserById from "app/users/queries/getUserById"
 import getAbilities from "app/abilities/queries/getAbilities"
 import getCharacterBySlug from "app/characters/queries/getCharacterBySlug"
+import { AbilityRank } from "db"
+import { parseAbilityRank } from "app/core/utils/parseAbilityRank"
+import { rollFudgeDice, rollDoubleFudgeDice } from "app/core/game-logic/rollFudgeDice"
+import { printFudgeDiceResult, FudgeDiceResult } from "app/core/game-logic/parseFudgeDice"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
 export const Character = () => {
-  const router = useRouter()
   const slug = useParam("slug", "string")
-  const [deleteCharacterMutation] = useMutation(deleteCharacter)
-  //const [character] = useQuery(getCharacter, { id: slug })
+  const [diceOutput, setDiceOutput] = useState<FudgeDiceResult | undefined>(undefined)
   const [character] = useQuery(getCharacterBySlug, { slug: slug })
   const [{ abilities }] = usePaginatedQuery(getAbilities, {
     where: { characterId: character.id },
   })
+  const currentUser = useCurrentUser()
   const [user] = useQuery(getUserById, { id: character.userId })
+  const ranks = Array.from(new Set<string>(abilities.map((ability) => ability.ranking)))
+
+  const handleDiceRoll = (rank: AbilityRank, abilityName: string) => {
+    const roll = rollFudgeDice(rank)
+    const result = {
+      ...roll,
+      userName: currentUser?.name,
+      characterName: character.name,
+      abilityName,
+    }
+    setDiceOutput(result)
+
+    return undefined
+  }
+
+  const handleDoubleDiceRoll = () => {
+    if (diceOutput) setDiceOutput(rollDoubleFudgeDice(diceOutput))
+
+    return undefined
+  }
 
   return (
     <>
@@ -38,28 +50,41 @@ export const Character = () => {
         <h1>{character.name}</h1>
         <p>Spiller: {user?.name}</p>
         <pre>{JSON.stringify(character, null, 2)}</pre>
-        <pre>{JSON.stringify(abilities, null, 2)}</pre>
 
         <Link href={Routes.EditCharacterPage({ slug: character.slug })}>
-          <a>Edit</a>
+          <a>Rediger</a>
         </Link>
 
         <hr />
         <h2>Evner</h2>
+        {diceOutput && (
+          <div>
+            {printFudgeDiceResult(diceOutput)}
+            {diceOutput.secondRollRequired && (
+              <button onClick={handleDoubleDiceRoll}>Trill igjen!</button>
+            )}
+          </div>
+        )}
         <hr />
-
-        <button
-          type="button"
-          onClick={async () => {
-            if (window.confirm("This will be deleted")) {
-              await deleteCharacterMutation({ id: character.id })
-              router.push(Routes.CharactersPage())
-            }
-          }}
-          style={{ marginLeft: "0.5rem" }}
-        >
-          Slett
-        </button>
+        {ranks.map((rank) => {
+          return (
+            <div key={rank}>
+              <h3>{parseAbilityRank(AbilityRank[rank])}</h3>
+              <div>
+                {abilities
+                  .filter((ability) => ability.ranking === rank)
+                  .map((ability) => (
+                    <button
+                      key={ability.id}
+                      onClick={() => handleDiceRoll(rank as AbilityRank, ability.name)}
+                    >
+                      {ability.name}
+                    </button>
+                  ))}
+              </div>
+            </div>
+          )
+        })}
       </div>
     </>
   )
@@ -70,7 +95,7 @@ const ShowCharacterPage: BlitzPage = () => {
     <div>
       <p>
         <Link href={Routes.CharactersPage()}>
-          <a>Characters</a>
+          <a>Karakterer</a>
         </Link>
       </p>
 

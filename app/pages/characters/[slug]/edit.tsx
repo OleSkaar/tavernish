@@ -13,16 +13,17 @@ import {
 } from "blitz"
 
 import Layout from "app/core/layouts/Layout"
-import getCharacter from "app/characters/queries/getCharacter"
 import updateCharacter from "app/characters/mutations/updateCharacter"
 import { CharacterForm, FORM_ERROR } from "app/characters/components/CharacterForm"
 import getAbilities from "app/abilities/queries/getAbilities"
 import { UserRole } from "db"
 import getCharacterBySlug from "app/characters/queries/getCharacterBySlug"
+import deleteCharacter from "app/characters/mutations/deleteCharacter"
 
 export const EditCharacter = () => {
   const router = useRouter()
   const slug = useParam("slug", "string")
+  const [deleteCharacterMutation] = useMutation(deleteCharacter)
   const [character, { setQueryData }] = useQuery(
     getCharacterBySlug,
     { slug: slug },
@@ -73,6 +74,19 @@ export const EditCharacter = () => {
           }}
         />
       </div>
+      <hr />
+      <button
+        type="button"
+        onClick={async () => {
+          if (window.confirm("This will be deleted")) {
+            await deleteCharacterMutation({ id: character.id })
+            router.push(Routes.CharactersPage())
+          }
+        }}
+        style={{ marginLeft: "0.5rem" }}
+      >
+        Slett
+      </button>
     </>
   ) : (
     <div>

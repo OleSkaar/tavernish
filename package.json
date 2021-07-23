@@ -26,6 +26,7 @@
   "dependencies": {
     "@prisma/client": "2.26.0",
     "blitz": "0.38.2",
+    "discord.js": "12.5.3",
     "final-form": "4.20.2",
     "final-form-arrays": "3.0.2",
     "react": "alpha",

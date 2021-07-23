@@ -9,10 +9,11 @@ import { parseAbilityRank } from "app/core/utils/parseAbilityRank"
 import { rollFudgeDice, rollDoubleFudgeDice } from "app/core/game-logic/rollFudgeDice"
 import { printFudgeDiceResult, FudgeDiceResult } from "app/core/game-logic/parseFudgeDice"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import { sendMessageToDiscord } from "app/core/webhooks/discord"
 
 export const Character = () => {
   const slug = useParam("slug", "string")
-  const [diceOutput, setDiceOutput] = useState<FudgeDiceResult | undefined>(undefined)
+  const [diceResult, setDiceOutput] = useState<FudgeDiceResult | undefined>(undefined)
   const [character] = useQuery(getCharacterBySlug, { slug: slug })
   const [{ abilities }] = usePaginatedQuery(getAbilities, {
     where: { characterId: character.id },
@@ -28,6 +29,10 @@ export const Character = () => {
       userName: currentUser?.name,
       characterName: character.name,
       abilityName,
+      timestamp: new Date(),
+    }
+    if (!result.secondRollRequired) {
+      sendMessageToDiscord(printFudgeDiceResult(result))
     }
     setDiceOutput(result)
 
@@ -35,7 +40,15 @@ export const Character = () => {
   }
 
   const handleDoubleDiceRoll = () => {
-    if (diceOutput) setDiceOutput(rollDoubleFudgeDice(diceOutput))
+    if (diceResult) {
+      const result = {
+        ...diceResult,
+        timestamp: new Date(),
+      }
+
+      sendMessageToDiscord(printFudgeDiceResult(result))
+      setDiceOutput(rollDoubleFudgeDice(result))
+    }
 
     return undefined
   }
@@ -57,10 +70,14 @@ export const Character = () => {
 
         <hr />
         <h2>Evner</h2>
-        {diceOutput && (
+        {diceResult && (
           <div>
-            {printFudgeDiceResult(diceOutput)}
-            {diceOutput.secondRollRequired && (
+            <p>
+              {diceResult.timestamp.toLocaleDateString("no-nb")}{" "}
+              {diceResult.timestamp.toLocaleTimeString("no-nb")}
+            </p>
+            {printFudgeDiceResult(diceResult)}
+            {diceResult.secondRollRequired && (
               <button onClick={handleDoubleDiceRoll}>Trill igjen!</button>
             )}
           </div>

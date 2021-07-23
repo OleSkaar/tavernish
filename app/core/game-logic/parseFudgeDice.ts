@@ -76,6 +76,7 @@ export interface FudgeDiceResult extends FudgeDiceOutput {
   userName?: string | null
   characterName: string
   abilityName: string
+  timestamp: Date
 }
 
 export const printFudgeDiceResult = (result: FudgeDiceResult) => {

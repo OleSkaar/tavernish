@@ -13,7 +13,7 @@ import { sendMessageToDiscord } from "app/core/webhooks/discord"
 
 export const Character = () => {
   const slug = useParam("slug", "string")
-  const [diceResult, setDiceOutput] = useState<FudgeDiceResult | undefined>(undefined)
+  const [diceResult, setDiceResult] = useState<FudgeDiceResult | undefined>(undefined)
   const [character] = useQuery(getCharacterBySlug, { slug: slug })
   const [{ abilities }] = usePaginatedQuery(getAbilities, {
     where: { characterId: character.id },
@@ -34,7 +34,7 @@ export const Character = () => {
     if (!result.secondRollRequired) {
       sendMessageToDiscord(printFudgeDiceResult(result))
     }
-    setDiceOutput(result)
+    setDiceResult(result)
 
     return undefined
   }
@@ -46,8 +46,10 @@ export const Character = () => {
         timestamp: new Date(),
       }
 
-      sendMessageToDiscord(printFudgeDiceResult(result))
-      setDiceOutput(rollDoubleFudgeDice(result))
+      const newResult = rollDoubleFudgeDice(result)
+
+      setDiceResult(newResult)
+      sendMessageToDiscord(printFudgeDiceResult(newResult))
     }
 
     return undefined

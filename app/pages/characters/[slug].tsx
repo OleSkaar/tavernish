@@ -7,14 +7,20 @@ import getCharacterBySlug from "app/characters/queries/getCharacterBySlug"
 import { AbilityRank } from "db"
 import { parseAbilityRank } from "app/core/utils/parseAbilityRank"
 import { rollFudgeDice, rollDoubleFudgeDice } from "app/core/game-logic/rollFudgeDice"
-import { printFudgeDiceResult, FudgeDiceResult } from "app/core/game-logic/parseFudgeDice"
+import {
+  printFudgeDiceResult,
+  FudgeDiceResult,
+  fudgeDiceResultToSymbols,
+} from "app/core/game-logic/parseFudgeDice"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { sendMessageToDiscord } from "app/core/webhooks/discord"
-import NumericDiceRoller from "app/core/game-logic/components/GeneralDiceRoller"
+import GeneralDiceRoller from "app/core/game-logic/components/GeneralDiceRoller"
+import { useDiceResultState } from "app/core/game-logic/hooks/useDiceResultState"
 
 export const Character = () => {
   const slug = useParam("slug", "string")
-  const [diceResult, setDiceResult] = useState<FudgeDiceResult | undefined>(undefined)
+  const [fudgeDiceResult, setFudgeDiceResult] = useState<FudgeDiceResult | undefined>(undefined)
+  const { diceResult, setDiceResult } = useDiceResultState()
   const [character] = useQuery(getCharacterBySlug, { slug: slug })
   const [{ abilities }] = usePaginatedQuery(getAbilities, {
     where: { characterId: character.id },
@@ -30,26 +36,25 @@ export const Character = () => {
       userName: currentUser?.name,
       characterName: character.name,
       abilityName,
-      timestamp: new Date(),
     }
+    setFudgeDiceResult(result)
+    const parsedResult = printFudgeDiceResult(result)
+    setDiceResult({ result: parsedResult, timestamp: new Date() })
+
     if (!result.secondRollRequired) {
       sendMessageToDiscord(printFudgeDiceResult(result))
     }
-    setDiceResult(result)
-
     return undefined
   }
 
   const handleDoubleDiceRoll = () => {
-    if (diceResult) {
-      const result = {
-        ...diceResult,
-        timestamp: new Date(),
-      }
+    if (fudgeDiceResult) {
+      const newResult = rollDoubleFudgeDice(fudgeDiceResult)
+      const parsedResult = printFudgeDiceResult(newResult)
+      console.log(newResult)
 
-      const newResult = rollDoubleFudgeDice(result)
-
-      setDiceResult(newResult)
+      setFudgeDiceResult(newResult)
+      setDiceResult({ result: parsedResult, timestamp: new Date() })
       sendMessageToDiscord(printFudgeDiceResult(newResult))
     }
 
@@ -75,14 +80,24 @@ export const Character = () => {
         <h2>Evner</h2>
         {diceResult && (
           <div>
-            <p>
-              {diceResult.timestamp.toLocaleDateString("no-nb")}{" "}
-              {diceResult.timestamp.toLocaleTimeString("no-nb")}
-            </p>
-            {printFudgeDiceResult(diceResult)}
-            {diceResult.secondRollRequired && (
-              <button onClick={() => handleDoubleDiceRoll}>Trill igjen!</button>
+            {diceResult?.timestamp && (
+              <p>
+                {diceResult.timestamp.toLocaleDateString("no-nb")}{" "}
+                {diceResult.timestamp.toLocaleTimeString("no-nb")}
+              </p>
             )}
+            {
+              <div>
+                {fudgeDiceResult && fudgeDiceResult.secondRollRequired
+                  ? `Du trillet ${fudgeDiceResultToSymbols(fudgeDiceResult.firstRoll)} i ${
+                      fudgeDiceResult.abilityName
+                    }. Trill igjen!`
+                  : diceResult.result}
+                {fudgeDiceResult && fudgeDiceResult.secondRollRequired && (
+                  <button onClick={handleDoubleDiceRoll}>Trill igjen!</button>
+                )}
+              </div>
+            }
           </div>
         )}
         {ranks.map((rank) => {
@@ -106,7 +121,7 @@ export const Character = () => {
         })}
         <hr />
         <h2>Generelt</h2>
-        <NumericDiceRoller characterName={character.name} />
+        <GeneralDiceRoller characterName={character.name} setDiceResult={setDiceResult} />
       </div>
     </>
   )

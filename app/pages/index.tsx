@@ -4,7 +4,8 @@ import Layout from "app/core/layouts/Layout"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import logout from "app/auth/mutations/logout"
 import { CharactersList } from "app/pages/characters/index"
-import NumericDiceRoller from "app/core/game-logic/components/GeneralDiceRoller"
+import GeneralDiceRoller from "app/core/game-logic/components/GeneralDiceRoller"
+import { useDiceResultState } from "app/core/game-logic/hooks/useDiceResultState"
 
 /*
  * This file is just for a pleasant getting started page for your new app.
@@ -56,6 +57,8 @@ const UserInfo = () => {
 }
 
 const Home: BlitzPage = () => {
+  const { diceResult, setDiceResult } = useDiceResultState()
+
   return (
     <div className="container">
       <main>
@@ -66,7 +69,8 @@ const Home: BlitzPage = () => {
           </Suspense>
         </div>
         <CharactersList />
-        <NumericDiceRoller />
+        {diceResult.result}
+        <GeneralDiceRoller setDiceResult={setDiceResult} />
       </main>
     </div>
   )

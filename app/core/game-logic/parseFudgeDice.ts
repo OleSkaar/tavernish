@@ -69,14 +69,13 @@ const printFudgeDiceRoll = (roll: FudgeDiceRange) => {
   }
 }
 
-const fudgeDiceResultToSymbols = (roll: FudgeDicePair) =>
+export const fudgeDiceResultToSymbols = (roll: FudgeDicePair) =>
   `${printFudgeDiceRoll(roll.dieOne)}${printFudgeDiceRoll(roll.dieTwo)}`
 
 export interface FudgeDiceResult extends FudgeDiceOutput {
   userName?: string | null
   characterName: string
   abilityName: string
-  timestamp: Date
 }
 
 export const printFudgeDiceResult = (result: FudgeDiceResult) => {

@@ -35,7 +35,11 @@ export function CharacterForm<S extends z.ZodType<any, any>>(props: FormProps<S>
                         <div key={fieldArrayName}>
                           <div>
                             <label>Evne</label>
-                            <Field name={`${fieldArrayName}.name`} component="input" />
+                            <Field
+                              name={`${fieldArrayName}.name`}
+                              component="input"
+                              className="border border-black"
+                            />
                           </div>
                           <div>
                             <label>Bioevne?</label>

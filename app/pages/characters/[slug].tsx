@@ -16,6 +16,7 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import { sendMessageToDiscord } from "app/core/webhooks/discord"
 import GeneralDiceRoller from "app/core/game-logic/components/GeneralDiceRoller"
 import { useDiceResultState } from "app/core/game-logic/hooks/useDiceResultState"
+import { Button } from "app/core/components/Button"
 
 export const Character = () => {
   const slug = useParam("slug", "string")
@@ -67,17 +68,48 @@ export const Character = () => {
         <title>Tavernish | {character.name}</title>
       </Head>
 
-      <div>
-        <h1>{character.name}</h1>
-        <p>Spiller: {user?.name}</p>
-        <pre>{JSON.stringify(character, null, 2)}</pre>
+      <div className="space-y-4">
+        <div className="flex items-end">
+          <span className="text-sm inline-block align-baseline">Navn</span>
+          <h1 className="text-2xl border-b-2 border-dotted border-black pl-2 inline w-full">
+            {character.name}
+          </h1>
+        </div>
 
-        <Link href={Routes.EditCharacterPage({ slug: character.slug })}>
-          <a>Rediger</a>
-        </Link>
+        <span className="text-sm m-auto w-full block text-center">Spiller</span>
+        <div className="flex items-center">
+          <div className="w-full flex justify-evenly border border-dotted border-gray-700 p-4">
+            <div className="border-dashed border-2 border-blue-900 p-4 p y-2">{user?.name}</div>
+            {currentUser && (
+              <Link href={Routes.EditCharacterPage({ slug: character.slug })}>
+                <a className="border-dashed border-2 border-red-900 p-4 p y-2">✏️ Rediger</a>
+              </Link>
+            )}
+          </div>
+        </div>
 
-        <hr />
-        <h2>Evner</h2>
+        <div className="flex items-end">
+          <span className="text-sm inline-block align-baseline">Rang</span>
+          <p className="border-b-2 border-dotted border-black pl-2 inline w-full">
+            {character.rank ?? ""}
+          </p>
+        </div>
+
+        <div className="flex items-end">
+          <span className="text-sm inline-block align-baseline">Titler</span>
+          <p className="border-b-2 border-dotted border-black pl-2 inline w-full">
+            {character.titles ?? ""}
+          </p>
+        </div>
+
+        <div className="flex items-end">
+          <span className="text-sm inline-block align-baseline">Lyte</span>
+          <p className="border-b-2 border-dotted border-black pl-2 inline w-full">
+            {character.flaw ?? ""}
+          </p>
+        </div>
+
+        <h2 className="text-2xl">Evner</h2>
         {diceResult && (
           <div>
             {diceResult?.timestamp && (
@@ -102,25 +134,24 @@ export const Character = () => {
         )}
         {ranks.map((rank) => {
           return (
-            <div key={rank}>
-              <h3>{parseAbilityRank(AbilityRank[rank])}</h3>
-              <div>
+            <div key={rank} className="space-y-2">
+              <h3 className="text-lg">{parseAbilityRank(AbilityRank[rank])}</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {abilities
                   .filter((ability) => ability.ranking === rank)
                   .map((ability) => (
-                    <button
+                    <Button
                       key={ability.id}
+                      text={ability.name}
                       onClick={() => handleDiceRoll(rank as AbilityRank, ability.name)}
-                    >
-                      {ability.name}
-                    </button>
+                      color={ability.isBioAbility ? "orange" : "green"}
+                    />
                   ))}
               </div>
             </div>
           )
         })}
-        <hr />
-        <h2>Generelt</h2>
+
         <GeneralDiceRoller characterName={character.name} setDiceResult={setDiceResult} />
       </div>
     </>
@@ -130,12 +161,6 @@ export const Character = () => {
 const ShowCharacterPage: BlitzPage = () => {
   return (
     <div>
-      <p>
-        <Link href={Routes.CharactersPage()}>
-          <a>Karakterer</a>
-        </Link>
-      </p>
-
       <Suspense fallback={<div>Laster...</div>}>
         <Character />
       </Suspense>

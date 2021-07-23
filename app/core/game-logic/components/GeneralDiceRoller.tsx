@@ -48,9 +48,14 @@ const GeneralDiceRoller = ({ characterName, setDiceResult }: GeneralDiceRollerPr
     <div className="space-y-4">
       <h2 className="text-2xl">Generelle terninger</h2>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Button text={"2df"} onClick={() => handleFudgeDiceRoll()} />
+        <Button text={"2df"} onClick={() => handleFudgeDiceRoll()} color={"grey"} />
         {AllNumericDice.map((die) => (
-          <Button key={`d${die}`} text={`d${die}`} onClick={() => handleDiceRoll(die)} />
+          <Button
+            key={`d${die}`}
+            text={`d${die}`}
+            onClick={() => handleDiceRoll(die)}
+            color={"grey"}
+          />
         ))}
       </div>
     </div>

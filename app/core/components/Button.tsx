@@ -1,12 +1,28 @@
 export interface ButtonProps {
   text: string
   onClick: () => void
-  key?: string
+  key?: string | number
+  color: "green" | "orange" | "grey"
 }
 
-export const Button = ({ text, onClick, key }: ButtonProps) => {
+const setColor = (color: string) => {
+  switch (color) {
+    case "green":
+      return "olivedrab"
+    case "orange":
+      return "darkorange"
+    case "grey":
+      return "darkgray"
+  }
+}
+
+export const Button = ({ text, onClick, key, color }: ButtonProps) => {
   return (
-    <button key={key} className="p-4 bg-gray-300 border-b-8 border-green-900" onClick={onClick}>
+    <button
+      key={key}
+      className={`p-4 bg-${setColor(color)} border-b-8 border-${setColor(color)}-dark`}
+      onClick={onClick}
+    >
       {text}
     </button>
   )
